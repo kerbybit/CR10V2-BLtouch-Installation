@@ -57,7 +57,7 @@
 
  //#define EZRstruder
  //#define Bondtech
- //#define E3DTitan
+ #define E3DTitan
  //#define DirectDrive // Any direct drive extruder, reduces filament change lengths
 
 /*
@@ -1434,58 +1434,13 @@
  *
  * Specify a Probe position as { X, Y, Z }
  */
-#if ENABLED(MachineCRX, HotendStock)
-   #if ENABLED(ABL_BLTOUCH)
-     #define NOZZLE_TO_PROBE_OFFSET { -22, -45, 0 }
-   #elif ANY(ABL_EZABL, ABL_NCSW)
-     #define NOZZLE_TO_PROBE_OFFSET { -44, -10, 0 }
-   #endif
-#elif ANY(MachineCR10SPro, MachineCR10Max) && ENABLED(HotendStock)
-  #define NOZZLE_TO_PROBE_OFFSET { -27, 0, 0 }
-#elif ENABLED(MachineCR10SV2)
-  #if ENABLED(ABL_BLTOUCH)
-    #define NOZZLE_TO_PROBE_OFFSET { 45, 7, 0 }
-  #elif ENABLED(ABL_EZABL) || ENABLED(ABL_NCSW)
-    #define NOZZLE_TO_PROBE_OFFSET { 45, 7, 0 }
-  #endif
-#else
-   #if (ENABLED(ABL_BLTOUCH) && ENABLED(HotendStock))
-     #define NOZZLE_TO_PROBE_OFFSET { -41, -8, 0 }
-   #endif
-
-  #if ((ENABLED(ABL_EZABL) || ENABLED(ABL_NCSW)) && ENABLED(HotendStock))
-    #if ENABLED(CREALITY_ABL_MOUNT)
-      #define NOZZLE_TO_PROBE_OFFSET { -55, -15, 0 }
-    #else
-      #define NOZZLE_TO_PROBE_OFFSET { -44, -10, 0 }
-    #endif
-  #endif
-
-
-   #if (ANY(ABL_BLTOUCH, ABL_EZABL,ABL_NCSW) && ANY(HotendE3D, HotendMosquito))
-    #if ENABLED(E3D_DUALFAN_MOUNT)
-      #if ENABLED(E3D_PROBEMOUNT_LEFT)
-        #define NOZZLE_TO_PROBE_OFFSET { -63, 5, 0 }
-      #else
-        #define NOZZLE_TO_PROBE_OFFSET { 63, 5, 0 }
-      #endif
-    #else
-      #define NOZZLE_TO_PROBE_OFFSET { 32, 5, 0 }
-    #endif
-   #endif
- #endif
+#define NOZZLE_TO_PROBE_OFFSET { -38, +15, 0 }
 
 // Certain types of probes need to stay away from edges
-#if ENABLED(MachineCR10Max, MachineCR10SV2)
-  #define MIN_PROBE_EDGE 30
-#elif ENABLED(ABL_BLTOUCH)
-  #define MIN_PROBE_EDGE 30
-#else
-  #define MIN_PROBE_EDGE 30
-#endif
+#define MIN_PROBE_EDGE 50
 
 // X and Y axis travel speed (mm/m) between probes
-#define XY_PROBE_SPEED 6000
+#define XY_PROBE_SPEED 12000
 
 // Feedrate (mm/m) for the first approach when double-probing (MULTIPLE_PROBING == 2)
 #define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
@@ -1526,8 +1481,8 @@
 #else
   #define Z_CLEARANCE_DEPLOY_PROBE   10 // Z Clearance for Deploy/Stow
 #endif
-#define Z_CLEARANCE_BETWEEN_PROBES  5 // Z Clearance between probe points
-#define Z_CLEARANCE_MULTI_PROBE     5 // Z Clearance between multiple probes
+#define Z_CLEARANCE_BETWEEN_PROBES  3 // Z Clearance between probe points
+#define Z_CLEARANCE_MULTI_PROBE     0.5 // Z Clearance between multiple probes
 #define Z_AFTER_PROBING           5 // Z position after probing is done
 
 #define Z_PROBE_LOW_POINT          -3 // Farthest distance below the trigger-point to go before stopping
@@ -1588,7 +1543,6 @@
 // @section machine
 
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
-
 
 #if(ANY(MachineEnder4, MachineEnder5))
   #define INVERT_X_DIR true
@@ -2115,27 +2069,13 @@
   #define HOMING_ADD 0
 #endif
 #if ENABLED(Z_SAFE_HOMING)
-  #if ENABLED(MachineS4)
-    #define Z_SAFE_HOMING_X_POINT 60 + HOMING_ADD   // X point for Z homing when homing all axis (G28).
-    #define Z_SAFE_HOMING_Y_POINT 60 + HOMING_ADD    // Y point for Z homing when homing all axis (G28).
-  #elif ANY(MachineS5, MachineCR10Max)
-    #define Z_SAFE_HOMING_X_POINT 80 + HOMING_ADD    // X point for Z homing when homing all axis (G28).
-    #define Z_SAFE_HOMING_Y_POINT 80 + HOMING_ADD    // Y point for Z homing when homing all axis (G28).
-  #elif ENABLED(MachineCRX)
-    #define Z_SAFE_HOMING_X_POINT 50 + HOMING_ADD    // X point for Z homing when homing all axis (G28).
-    #define Z_SAFE_HOMING_Y_POINT 70 + HOMING_ADD    // Y point for Z homing when homing all axis (G28).
-  #elif ANY(MachineEnder5, MachineEnder5Plus)
-    #define Z_SAFE_HOMING_X_POINT 110 + HOMING_ADD    // X point for Z homing when homing all axis (G28).
-    #define Z_SAFE_HOMING_Y_POINT 110 + HOMING_ADD    // Y point for Z homing when homing all axis (G28).
-  #else
-    #define Z_SAFE_HOMING_X_POINT 50 + HOMING_ADD    // X point for Z homing when homing all axis (G28).
-    #define Z_SAFE_HOMING_Y_POINT 50 + HOMING_ADD    // Y point for Z homing when homing all axis (G28).
-  #endif
+  #define Z_SAFE_HOMING_X_POINT 50 + HOMING_ADD    // X point for Z homing when homing all axis (G28).
+  #define Z_SAFE_HOMING_Y_POINT 50 + HOMING_ADD
 #endif
 
 // Homing speeds (mm/m)
 #define HOMING_FEEDRATE_XY (50*60)
-#define HOMING_FEEDRATE_Z  (4*60)
+#define HOMING_FEEDRATE_Z  (8*60)
 
 // Validate that endstops are triggered on homing moves
 #define VALIDATE_HOMING_ENDSTOPS
